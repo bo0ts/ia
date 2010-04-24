@@ -1,0 +1,5 @@
+Lorem ipsum dolor sit amet consectetur adipiscing elit Nunc quis
+Indeed we need a way to create a lover Bob and start an affair with some beloved
+Very simple: createLover takes a name of a beloved and the number of let's call them dates
+The other function startAffairWith takes the beloved's name and a lover It will then substitute the lover's past beloved names with the new beloved's one and remove every track of Bob's previous activities
+Yes you can say that: she's a very jealous type of a chick and hates Bob's past as you can imagine But let's face it Bob is not a saint after all and I frankly understand her 

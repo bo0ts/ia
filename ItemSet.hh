@@ -1,6 +1,7 @@
 #ifndef ITEMSET_HH__
 #define ITEMSET_HH__
 
+//STD
 #include <vector>
 #include <string>
 
@@ -8,9 +9,19 @@
 //is the responsibility of the user.
 class ItemSet {
 public:
-
+  
   ItemSet(const std::vector<std::string>& in) : itemV(in) {}
   ItemSet() { }
+
+  typedef std::vector<std::string> ItemVec;
+  typedef ItemVec::iterator iterator;
+  typedef ItemVec::const_iterator const_iterator;
+
+  iterator begin() { return itemV.begin(); }
+  const_iterator begin() const { return itemV.begin(); }
+  iterator end() { return itemV.end(); }
+  const_iterator end() const { return itemV.end(); }
+
 
   //Pre: None
   //Post: in is the last member of this itemset (e.g. back())
@@ -37,7 +48,6 @@ public:
   //Post: return value is subset without i-th value of this
   ItemSet subset(unsigned int i) const;
 private:
-  typedef std::vector<std::string> ItemVec;
   ItemVec itemV;
 };
 
