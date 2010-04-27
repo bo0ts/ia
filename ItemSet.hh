@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <string>
+#include <iostream>
 
 //ItemSet
 //changes to spec: no passing of ints, just iterators, "resorts" after every insertion,
@@ -55,6 +56,13 @@ public:
   //Pre: pos is in range [ begin(), end() )
   //Post: return value is the subset of this without the value pointed to by pos
   ItemSet subset(iterator pos) const;
+
+  friend std::ostream& operator<<(std::ostream& os, const ItemSet& rhs) {
+    for(ItemSet::iterator it = rhs.begin(); it != rhs.end(); ++it)
+      os << (*it) << " ";
+    os << std::endl;
+    return os;
+  }
 private:
   Items items;
 };

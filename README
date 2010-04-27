@@ -1,5 +1,5 @@
 make test
 make 
-./main --file INFILE
+./main --file tags2.txt
 
 tags2.txt: superuser.com, tags per question, CC-BY-SA

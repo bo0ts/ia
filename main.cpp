@@ -4,11 +4,18 @@
 //std
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 //boost
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
+
+struct SetSize {
+  bool operator() (const ItemSet a, const ItemSet b) {
+    return a.size() < b.size();
+  }
+};
 
 int main(int argc, char *argv[]) {
 
@@ -38,11 +45,35 @@ int main(int argc, char *argv[]) {
   }
 
   ItemSetContainer a(vm["file"].as<std::string>());
-  for(ItemSetContainer::ItemSets::iterator it = a.begin();
-      it != a.end(); ++it) {
-    for(ItemSet::const_iterator it2 = it->begin();
-	it2 != it->end(); ++it2)
-      std::cout << *it2 << " ";
-    std::cout << std::endl;
+
+  //find the largest itemset, lambdas....
+  ItemSetContainer::iterator largest = std::max_element(a.begin(), a.end(), SetSize());
+  std::cout << "Largest set:" << std::endl;
+  std::cout << *largest << std::endl;
+
+  //show all sets that are contained within the largest set, works but too much output :(
+  /*
+  for(ItemSetContainer::const_iterator it = a.begin(); it != a.end(); ++it) {
+    if(largest->contains(*it)) {
+      for(ItemSet::const_iterator it2 = it->begin();  it2 != it->end(); ++it2)
+	std::cout << *it2 << " ";
+      std::cout << std::endl;
+    }
   }
+  */
+  
+  std::cout << "Remove the middle:" << std::endl;
+  ItemSet::iterator it = largest->begin();
+  std::advance(it, largest->size() / 2);
+  ItemSet subset = largest->subset(it);
+  std::cout << subset << std::endl;
+  
+  std::cout << "Match on the first " << (largest->size() / 2) <<  " items:" << std::endl;
+  if(subset.matches(*largest, it))
+    std::cout << "True.";
+  else
+    std::cout << "You can't read this.";
+  std::cout << std::endl;
+
+  //...
 }
