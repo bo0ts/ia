@@ -28,20 +28,16 @@ struct Fixture {
 
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture);
-BOOST_AUTO_TEST_CASE(add_and_back) {
-  ItemSet itemset;
-  std::string test = "foo";
-  std::string test2 = "bar";
-  itemset.push_back(test);
-  BOOST_CHECK_EQUAL(test, itemset.back());
-  itemset.push_back(test2);
-  BOOST_CHECK_EQUAL(test2, itemset.back());
-}
 
 BOOST_AUTO_TEST_CASE(matches) {
-  BOOST_CHECK(test1.matches(test2, 2));
-  BOOST_CHECK(!test2.matches(test3, 2));
-  BOOST_CHECK(test2.matches(test3, 1));
+  BOOST_CHECK(!test1.matches(test2, test2.end()));
+  test2.insert("baz");
+  BOOST_CHECK(test1.matches(test2, test2.end()));
+  test2.erase("baz");
+
+  BOOST_CHECK(!test2.matches(test3, test3.end()));
+
+  BOOST_CHECK(!test2.matches(test3, test3.find(std::string("foo"))));
 }
 
 BOOST_AUTO_TEST_CASE(contains) {
@@ -51,8 +47,8 @@ BOOST_AUTO_TEST_CASE(contains) {
 }
 
 BOOST_AUTO_TEST_CASE(subset) {
-  ItemSet sub = test1.subset(1);
-  BOOST_CHECK(test3.matches(sub, 2));
+  ItemSet sub = test1.subset(test1.find("bar"));
+  BOOST_CHECK(test3.matches(sub, sub.end()));
 }
 
 BOOST_AUTO_TEST_SUITE_END();

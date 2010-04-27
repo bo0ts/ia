@@ -6,33 +6,16 @@
 
 using namespace std;
 
-void ItemSet::push_back(const std::string& in) { 
-  itemV.push_back(in);
-}
-
-void ItemSet::sort() {
-  std::sort(itemV.begin(), itemV.end());
-}
-
-bool ItemSet::matches(const ItemSet& other, unsigned int i) const {
-  assert(i <= other.itemV.size());
-  ItemVec::const_iterator it = other.itemV.begin();
-  advance(it, i);
-  return equal(other.itemV.begin(), it, this->itemV.begin());
+bool ItemSet::matches(const ItemSet& other, iterator pos) const {
+  return equal(other.items.begin(), pos, this->items.begin());
 }
 
 bool ItemSet::contains(const ItemSet& other) const {
-  return includes(itemV.begin(), itemV.end(), other.itemV.begin(), other.itemV.end());
+  return includes(items.begin(), items.end(), other.items.begin(), other.items.end());
 }
 
-ItemSet ItemSet::subset(unsigned int i) const {
-  assert(i < itemV.size());
-  //passing ints for container access ain't beautiful...
-  ItemSet tmp;
-  for(unsigned int c = 0; c < itemV.size(); ++c) {
-    if(c != i) {
-      tmp.push_back(itemV[c]);
-    }
-  }
+ItemSet ItemSet::subset(iterator pos) const {
+  ItemSet tmp(*this);
+  tmp.erase(*pos);
   return tmp;
 }

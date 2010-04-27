@@ -1,7 +1,5 @@
-test testetetes
-tse
-t
-est
-es
-tse
-es
+make test
+make 
+./main --file INFILE
+
+tags2.txt: superuser.com, tags per question, CC-BY-SA

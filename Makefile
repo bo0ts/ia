@@ -1,16 +1,16 @@
 OBJS = ItemSet.o ItemSetContainer.o main.o
-CC = g++
+CXX = g++
 DEBUG = -g
-OPTI = -O4
-CFLAGS = -Wall -c $(DEBUG) $(OPTI)
-LFLAGS = -Wall $(DEBUG) $(OPTI)
+OPTI = -O0
+CXXFLAGS = -Wall -Wextra -c $(DEBUG) $(OPTI)
+LFLAGS = -lboost_program_options $(DEBUG) $(OPTI)
 
 main: $(OBJS) 
-	$(CC) $(LFLAGS) $(OBJS) -o main
+	$(CXX) $(LFLAGS) $(OBJS) -o main
 
 .PHONY: clean
 clean:
-	rm *.o test main
+	rm -f *.o test main
 
 test: ItemSetTest.o ItemSet.o
 	$(CC) -lboost_unit_test_framework ItemSetTest.o ItemSet.o -o test && ./test

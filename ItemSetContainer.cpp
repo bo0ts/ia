@@ -15,6 +15,7 @@ ItemSetContainer::ItemSetContainer(const string& inFile) {
     vector<string> tokens;
 
     istringstream iss(tokenLine);
+    
     copy(istream_iterator<string>(iss),
 	 istream_iterator<string>(),
 	 back_inserter<vector<string> >(tokens)); 
