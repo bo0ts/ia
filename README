@@ -2,4 +2,13 @@ make test
 make 
 ./main --file tags2.txt
 
+environment:
+	g++ (GCC) 4.5.0
+	Linux nal_Ra 2.6.33-ARCH #1 SMP PREEMPT Sun Apr 4 10:27:30 CEST 2010 x86_64 
+	Intel(R) Core(TM) i7 CPU 860 @ 2.80GHz GenuineIntel GNU/Linux
+	boost 1.41.0-1
+	GNU Make 3.81
+	GNU Emacs 23.1.1
+	... ;)
+
 tags2.txt: superuser.com, tags per question, CC-BY-SA
