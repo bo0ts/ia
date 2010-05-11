@@ -1,7 +1,7 @@
 OBJS = ItemSet.o ItemSetContainer.o main.o
 CXX = g++
 DEBUG = -g
-OPTI = -O0
+OPTI = -O4
 CXXFLAGS = -Wall -Wextra -c $(DEBUG) $(OPTI)
 LFLAGS = -lboost_program_options $(DEBUG) $(OPTI)
 
