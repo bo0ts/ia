@@ -57,7 +57,7 @@ public:
 
   //a map of 1-itemsets to their occurences in *this* ItemSetContainer
   //this doesn't make a lot of sense to me...
-  std::map<ItemSet, unsigned int> init_pass() const;
+  ItemSetContainer init_pass() const;
 private:
   ItemSets itemSets;
 };

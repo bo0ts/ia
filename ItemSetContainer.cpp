@@ -9,23 +9,28 @@
 using namespace std;
 
 namespace {
-  class CopyAndCount {
+  struct Counter {
+    //this just isn't getting any smaller
     typedef map<ItemSet, unsigned int> ItemCounter;
-    ItemCounter& toFill;
-  public:
-    CopyAndCount(ItemCounter& toFill) : toFill(toFill) {}
+    ItemCounter counter;
     void operator() (const ItemSet& in) {
       for(ItemSet::const_iterator it = in.begin(); it != in.end(); ++it) {
-	//sure...
 	ItemSet tmp;
 	tmp.insert(*it);
-	pair<ItemCounter::iterator, bool> ret = toFill.insert(make_pair(tmp, 1u));
-	if(ret.second == false) {
-	  ++(ret.first->second);
-	}
+	pair<ItemCounter::iterator, bool> ret = counter.insert(make_pair(tmp, 1u));
+	//raise if known
+	if(ret.second == false) { ++(ret.first->second); }
       }
     }
   };
+
+  struct PairToItemSet : public unary_function< pair< ItemSet, unsigned int>& , ItemSet> {
+    ItemSet operator() (pair<ItemSet, unsigned int> in) {
+      in.first.support() = in.second;
+      return ItemSet(in.first);
+    }
+  };
+
 }; //file static
 
 ItemSetContainer::ItemSetContainer(const string& inFile) {
@@ -47,10 +52,10 @@ ItemSetContainer::ItemSetContainer(const string& inFile) {
   }
 }
 
-map<ItemSet, unsigned int> ItemSetContainer::init_pass() const {
-  map<ItemSet, unsigned int> tmp;
-  for_each(begin(), end(), CopyAndCount(tmp));
+ItemSetContainer ItemSetContainer::init_pass() const {
+  Counter counter = for_each(begin(), end(), Counter());
+  ItemSetContainer tmp;
+  std::transform(counter.counter.begin(), counter.counter.end(), back_inserter(tmp), PairToItemSet());
 
-  //rvo will save us
   return tmp;
 }

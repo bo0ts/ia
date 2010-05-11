@@ -77,8 +77,6 @@ int main(int argc, char *argv[]) {
     std::cout << "You can't read this.";
   std::cout << std::endl << std::endl;
 
-  
-
   //copy a portition to make init_pass more readable
   ItemSetContainer portition;
   std::copy(a.begin(), a.begin() + 5, std::back_inserter(portition));
@@ -86,15 +84,15 @@ int main(int argc, char *argv[]) {
   std::cout << "The first 5 ItemSetContainers contain: " << std::endl;
   for(ItemSetContainer::const_iterator it = portition.begin();
       it != portition.end(); ++it)
-    std::cout << *it;
+    std::cout << *it << std::endl;
 
   std::cout << std::endl << std::endl;
 
   //showing off init_pass
   //init pass uses operator< for ItemSets, it works
   std::cout << "init_pass on those 5 yields: " << std::endl;
-  std::map<ItemSet, unsigned int> init_pass = portition.init_pass();
-  for(std::map<ItemSet, unsigned int>::const_iterator it = init_pass.begin();
+  ItemSetContainer init_pass = portition.init_pass();
+  for(ItemSetContainer::const_iterator it = init_pass.begin();
       it != init_pass.end(); ++it)
-    std::cout << it->first << " times: " << it->second << std::endl;
+    std::cout << *it << std::endl;
 }

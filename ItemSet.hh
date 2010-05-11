@@ -13,8 +13,11 @@
 class ItemSet {
 public:
   //from vector, convenience
-  ItemSet(const std::vector<std::string>& in) : items(in.begin(), in.end()) {}
-  ItemSet(const std::set<std::string>& in) : items(in) {}
+  explicit ItemSet(const std::vector<std::string>& in, unsigned int support = 0) : 
+    support_(support), items(in.begin(), in.end()) {}
+  explicit ItemSet(const std::set<std::string>& in, unsigned int support = 0) : 
+    support_(support), items(in) {}
+  explicit ItemSet(unsigned int support) : support_(support) {}
   ItemSet() { }
 
   //typedefs
@@ -57,14 +60,20 @@ public:
   //Post: return value is the subset of this without the value pointed to by pos
   ItemSet subset(iterator pos) const;
 
+  bool operator< (const ItemSet& rhs) const;
+  
+  unsigned int& support() { return support_; }
+  const unsigned int& support() const { return support_; }
+
   friend std::ostream& operator<<(std::ostream& os, const ItemSet& rhs) {
     for(ItemSet::iterator it = rhs.begin(); it != rhs.end(); ++it)
       os << (*it) << " ";
+    os << "Support: " << rhs.support();
     return os;
   }
 
-  bool operator< (const ItemSet& rhs) const;
 private:
+  unsigned int support_;
   Items items;
 };
 
