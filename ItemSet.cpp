@@ -19,3 +19,7 @@ ItemSet ItemSet::subset(iterator pos) const {
   tmp.erase(*pos);
   return tmp;
 }
+
+bool ItemSet::operator<(const ItemSet& rhs) const {
+  return lexicographical_compare(items.begin(), items.end(), rhs.items.begin(), rhs.items.end());
+}

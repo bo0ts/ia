@@ -60,9 +60,10 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const ItemSet& rhs) {
     for(ItemSet::iterator it = rhs.begin(); it != rhs.end(); ++it)
       os << (*it) << " ";
-    os << std::endl;
     return os;
   }
+
+  bool operator< (const ItemSet& rhs) const;
 private:
   Items items;
 };
