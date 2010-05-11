@@ -11,10 +11,12 @@
 
 namespace po = boost::program_options;
 
-struct SetSize {
-  bool operator() (const ItemSet a, const ItemSet b) {
-    return a.size() < b.size();
-  }
+namespace {
+  struct SetSize {
+    bool operator() (const ItemSet a, const ItemSet b) {
+      return a.size() < b.size();
+    }
+  };
 };
 
 int main(int argc, char *argv[]) {
@@ -73,7 +75,26 @@ int main(int argc, char *argv[]) {
     std::cout << "True.";
   else
     std::cout << "You can't read this.";
-  std::cout << std::endl;
+  std::cout << std::endl << std::endl;
 
-  //...
+  
+
+  //copy a portition to make init_pass more readable
+  ItemSetContainer portition;
+  std::copy(a.begin(), a.begin() + 5, std::back_inserter(portition));
+  //a reduced portition, show it
+  std::cout << "The first 5 ItemSetContainers contain: " << std::endl;
+  for(ItemSetContainer::const_iterator it = portition.begin();
+      it != portition.end(); ++it)
+    std::cout << *it;
+
+  std::cout << std::endl << std::endl;
+
+  //showing off init_pass
+  //init pass uses operator< for ItemSets, it works
+  std::cout << "init_pass on those 5 yields: " << std::endl;
+  std::map<ItemSet, unsigned int> init_pass = portition.init_pass();
+  for(std::map<ItemSet, unsigned int>::const_iterator it = init_pass.begin();
+      it != init_pass.end(); ++it)
+    std::cout << it->first << " times: " << it->second << std::endl;
 }
