@@ -13,6 +13,7 @@ namespace {
     //this just isn't getting any smaller
     typedef map<ItemSet, unsigned int> ItemCounter;
     ItemCounter counter;
+
     void operator() (const ItemSet& in) {
       for(ItemSet::const_iterator it = in.begin(); it != in.end(); ++it) {
 	ItemSet tmp;
@@ -24,10 +25,11 @@ namespace {
     }
   };
 
-  struct PairToItemSet : public unary_function< pair< ItemSet, unsigned int>& , ItemSet> {
-    ItemSet operator() (pair<ItemSet, unsigned int> in) {
-      in.first.support() = in.second;
-      return ItemSet(in.first);
+  struct PairToItemSet {
+    ItemSet operator() (const pair<ItemSet, unsigned int>& in) {
+      ItemSet tmp(in.first);
+      tmp.support() = in.second;
+      return tmp;
     }
   };
 
