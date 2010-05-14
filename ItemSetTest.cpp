@@ -9,9 +9,7 @@ using namespace std;
 using namespace boost::assign;
 
 struct Fixture {
-  ItemSet test1;
-  ItemSet test2;
-  ItemSet test3;
+  ItemSet test1,test2, test3;
   Fixture() {
     vector<string> one;
     vector<string> two;
@@ -19,6 +17,7 @@ struct Fixture {
     one += "foo", "bar", "baz";
     two += "foo", "bar";
     three += "foo", "baz";
+
     test1 = ItemSet(one);
     test2 = ItemSet(two);
     test3 = ItemSet(three);
@@ -49,6 +48,23 @@ BOOST_AUTO_TEST_CASE(contains) {
 BOOST_AUTO_TEST_CASE(subset) {
   ItemSet sub = test1.subset(test1.find("bar"));
   BOOST_CHECK(test3.matches(sub, sub.end()));
+}
+
+BOOST_AUTO_TEST_CASE(compare) {
+  ItemSet a, b, c, d, e;
+  vector<string> aV; aV += "a", "b", "c", "d";
+  vector<string> bV; bV += "a", "b", "c", "d", "e";
+  a = ItemSet(aV);
+  b = ItemSet(bV);
+  BOOST_CHECK(a < b);
+  vector<string> cV; cV += "a", "b", "c";
+  c = ItemSet(cV);
+  vector<string> dV; dV += "a", "b", "d";
+  d = ItemSet(dV);
+  vector<string> eV; eV += "b", "c";
+  e = ItemSet(eV);
+  BOOST_CHECK(c < d);
+  BOOST_CHECK(c < e);
 }
 
 BOOST_AUTO_TEST_SUITE_END();
