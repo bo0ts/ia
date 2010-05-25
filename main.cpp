@@ -80,13 +80,15 @@ int main(int argc, char *argv[]) {
   }
   
   ItemSetContainer transactions(vm["file"].as<std::string>());
-
+  std::cout << "front size: " << transactions.front().size() << std::endl;
+  transactions.erase(transactions.begin());
+  
   std::vector<ItemSetContainer> runs;
   runs.push_back(transactions.init_pass(minsup));
 
   while(!runs.back().empty()) {
-    runs.push_back(runs.back().generate_candidates(transactions, minsup));
-    std::cout << runs.back() << std::endl << std::endl;
+     runs.push_back(runs.back().generate_candidates(transactions, minsup));
+     std::cout << runs.back() << std::endl << std::endl;
   }
   
 

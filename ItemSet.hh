@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <iterator>
 
-class ItemSetContainer;
-
 //ItemSet
 //changes to spec: no passing of ints, just iterators, "resorts" after every insertion,
 //no back(), could be a typedef as well
@@ -89,10 +87,34 @@ public:
     return std::lexicographical_compare(items.begin(), items.end(), rhs.items.begin(), rhs.items.end());
   }
 
-  void determine_count(const ItemSetContainer& in);
-  
-  unsigned int count() const { return count_; }
+  bool operator> (const ItemSet& rhs) const {
+    return rhs < *this;
+  }
 
+
+  template<class ForwardIterator>
+  inline void determine_count(ForwardIterator first, ForwardIterator last) {
+    count_ = 0;
+    bool breakLine = false;
+
+    while(first != last) {
+      if(first->contains(*this)) {
+	count_ += 1;
+      } else {
+	if(breakLine) {
+	  break;
+	}
+      }
+
+      if(!breakLine && *first > *this) {
+	breakLine = true;
+      }
+
+      ++first;
+    }
+  }
+
+  unsigned int count() const { return count_; }
   double support(unsigned int n) const { return static_cast<double>(count_) / static_cast<double>(n); }
 
   friend std::ostream& operator<<(std::ostream& os, const ItemSet& rhs) {

@@ -28,6 +28,8 @@ ItemSetContainer::ItemSetContainer(const string& inFile) {
     //closing angle bracket, jesus...
     itemSets.back().sort();
   }
+
+  std::sort(begin(), end());
 }
 
 ItemSetContainer ItemSetContainer::init_pass(double minsup) const {
@@ -44,8 +46,9 @@ ItemSetContainer ItemSetContainer::init_pass(double minsup) const {
 
   std::transform(counter.begin(), counter.end(), 
 		 back_inserter(tmp), 
-		 [](const pair<std::string, unsigned int>& in) { 
+		 [](const pair<std::string, unsigned int>& in) -> ItemSet { 
 		   ItemSet tmp(in.second); tmp.push_back(in.first); return tmp; });
+  //pedantic borks on deduction of this lambda's return type :(
 
   auto it = std::remove_if(tmp.begin(), tmp.end(), [&minsup, this](const ItemSet& in) {
       return in.support(this->size()) < minsup; });
@@ -77,7 +80,7 @@ ItemSetContainer ItemSetContainer::generate_candidates(const ItemSetContainer& t
       }
 
       if(!notFound) {
-	c.determine_count(trans);
+	c.determine_count(trans.begin(), trans.end());
 	//do we need to check for duplicity?
 	if(c.support(trans.size()) >= minsup)
 	   tmp.push_back(c);
@@ -85,5 +88,6 @@ ItemSetContainer ItemSetContainer::generate_candidates(const ItemSetContainer& t
       ++it2;
     }
   }
+
   return tmp;
 }
