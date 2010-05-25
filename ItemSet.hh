@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 //ItemSet
 //changes to spec: no passing of ints, just iterators, "resorts" after every insertion,
@@ -50,17 +52,27 @@ public:
   //returns true if they are equal
   //Pre: pos is a iterator to an element of other 
   //Post: none
-  bool matches(const ItemSet& other, iterator pos) const;
+  bool matches(const ItemSet& other, iterator pos) const {
+    return equal(other.items.begin(), pos, this->items.begin());
+  }
 
   //checks if this includes other
   //Pre: true if it is Post: none
-  bool contains(const ItemSet& other) const; 
+  bool contains(const ItemSet& other) const {
+    return includes(items.begin(), items.end(), other.items.begin(), other.items.end());
+  }
   
   //Pre: pos is in range [ begin(), end() )
   //Post: return value is the subset of this without the value pointed to by pos
-  ItemSet subset(iterator pos) const;
+  ItemSet subset(iterator pos) const {
+    ItemSet tmp(*this);
+    tmp.erase(*pos);
+    return tmp;
+  }
 
-  bool operator< (const ItemSet& rhs) const;
+  bool operator< (const ItemSet& rhs) const {
+    return lexicographical_compare(items.begin(), items.end(), rhs.items.begin(), rhs.items.end());
+  }
   
   unsigned int& support() { return support_; }
   const unsigned int& support() const { return support_; }

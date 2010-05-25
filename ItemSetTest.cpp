@@ -24,8 +24,6 @@ struct Fixture {
   }
 };
 
-
-
 BOOST_FIXTURE_TEST_SUITE(s, Fixture);
 
 BOOST_AUTO_TEST_CASE(matches) {

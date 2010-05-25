@@ -19,6 +19,6 @@ ItemSetTest.o: ItemSetTest.cpp ItemSet.hh
 
 main.o: main.cpp ItemSetContainer.hh
 
-ItemSet.o: ItemSet.cpp ItemSet.hh
+ItemSet.o: ItemSet.hh
 
 ItemSetContainer.o: ItemSetContainer.cpp ItemSetContainer.hh ItemSet.hh
