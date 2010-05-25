@@ -12,7 +12,7 @@ main: $(OBJS)
 clean:
 	rm -f *.o test main
 
-test: ItemSetTest.o
+test: ItemSetTest.o ItemSet.hh
 	$(CC) -lboost_unit_test_framework ItemSetTest.o -o test && ./test
 
 ItemSetTest.o: ItemSetTest.cpp ItemSet.hh

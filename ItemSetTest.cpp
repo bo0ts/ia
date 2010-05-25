@@ -12,9 +12,7 @@ using namespace boost::assign;
 struct Fixture {
   ItemSet test1,test2, test3;
   Fixture() {
-    vector<string> one;
-    vector<string> two;
-    vector<string> three;
+    vector<string> one, two, three;
     one += "foo", "bar", "baz";
     two += "foo", "bar";
     three += "foo", "baz";
@@ -22,6 +20,7 @@ struct Fixture {
     test1 = ItemSet(one);
     test2 = ItemSet(two);
     test3 = ItemSet(three);
+    test1.sort(); test2.sort(); test3.sort();
   }
 };
 
@@ -29,9 +28,12 @@ BOOST_FIXTURE_TEST_SUITE(s, Fixture);
 
 BOOST_AUTO_TEST_CASE(matches) {
   BOOST_CHECK(!test1.matches(test2, test2.end()));
-  test2.insert("baz");
+  test2.push_back("baz");
+  test2.sort();
+
   BOOST_CHECK(test1.matches(test2, test2.end()));
-  test2.erase("baz");
+  test2.erase(test2.find("baz"));
+  test2.sort();
 
   BOOST_CHECK(!test2.matches(test3, test3.end()));
 

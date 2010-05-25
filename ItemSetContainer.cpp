@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ namespace {
     void operator() (const ItemSet& in) {
       for(ItemSet::const_iterator it = in.begin(); it != in.end(); ++it) {
 	ItemSet tmp;
-	tmp.insert(*it);
+	tmp.push_back(*it);
 	pair<ItemCounter::iterator, bool> ret = counter.insert(make_pair(tmp, 1u));
 	//raise if known
 	if(ret.second == false) { ++(ret.first->second); }
@@ -44,13 +45,14 @@ ItemSetContainer::ItemSetContainer(const string& inFile) {
     vector<string> tokens;
 
     istringstream iss(tokenLine);
-    
+
+    itemSets.push_back(ItemSet(0));
     copy(istream_iterator<string>(iss),
 	 istream_iterator<string>(),
-	 back_inserter<vector<string> >(tokens)); 
+	 back_inserter<ItemSet>(itemSets.back())); 
     //emacs indentation borks, when there is no SPC between
     //closing angle bracket, jesus...
-    itemSets.push_back(ItemSet(tokens));    
+    itemSets.back().sort();
   }
 }
 
