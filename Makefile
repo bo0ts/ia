@@ -1,8 +1,8 @@
-OBJS = ItemSetContainer.o main.o
+OBJS = ItemSet.o ItemSetContainer.o main.o
 CXX = g++
 DEBUG = -g
 OPTI = -O4
-CXXFLAGS = -Wall -Wextra -c $(DEBUG) $(OPTI)
+CXXFLAGS = -Wall -Wextra -std=c++0x -c $(DEBUG) $(OPTI)
 LFLAGS = -lboost_program_options $(DEBUG) $(OPTI)
 
 main: $(OBJS) 
@@ -14,6 +14,8 @@ clean:
 
 test: ItemSetTest.o ItemSet.hh
 	$(CC) -lboost_unit_test_framework ItemSetTest.o -o test && ./test
+
+ItemSet.o: ItemSet.hh ItemSet.cc
 
 ItemSetTest.o: ItemSetTest.cpp ItemSet.hh
 

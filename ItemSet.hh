@@ -9,16 +9,18 @@
 #include <algorithm>
 #include <iterator>
 
+class ItemSetContainer;
+
 //ItemSet
 //changes to spec: no passing of ints, just iterators, "resorts" after every insertion,
 //no back(), could be a typedef as well
 class ItemSet {
 public:
   //from vector, convenience
-  explicit ItemSet(const std::vector<std::string>& in, unsigned int support = 0) : 
-    support_(support), items(in) {}
-  explicit ItemSet(unsigned int support) : support_(support) {}
-  ItemSet() : support_(0) { }
+  explicit ItemSet(const std::vector<std::string>& in, unsigned int count = 0) : 
+    count_(count), items(in) {}
+  explicit ItemSet(unsigned int count) : count_(count) {}
+  ItemSet() : count_(0) { }
 
   //typedefs
   typedef std::vector<std::string> Items;
@@ -27,13 +29,15 @@ public:
   typedef Items::const_reference const_reference;
   typedef Items::reference reference;
   typedef Items::size_type size_type;
+  typedef std::string value_type;
 
   //iterators, no reverse
   const_iterator begin() const { return items.begin(); }
   const_iterator end() const { return items.end(); }
+  const_iterator cbegin() const { return items.cbegin(); }
+  const_iterator cend() const { return items.cend(); }
   iterator begin() { return items.begin(); }
   iterator end() { return items.end(); }
-
 
   //capacity
   bool empty() const { return items.empty(); }
@@ -77,25 +81,29 @@ public:
       if(pos != it)
 	tmp.push_back(*it);
     }
+
     return tmp;
   }
 
   bool operator< (const ItemSet& rhs) const {
     return std::lexicographical_compare(items.begin(), items.end(), rhs.items.begin(), rhs.items.end());
   }
+
+  void determine_count(const ItemSetContainer& in);
   
-  unsigned int& support() { return support_; }
-  const unsigned int& support() const { return support_; }
+  unsigned int count() const { return count_; }
+
+  double support(unsigned int n) const { return static_cast<double>(count_) / static_cast<double>(n); }
 
   friend std::ostream& operator<<(std::ostream& os, const ItemSet& rhs) {
-    for(ItemSet::const_iterator it = rhs.begin(); it != rhs.end(); ++it)
-      os << (*it) << " ";
-    os << "Support: " << rhs.support();
+    std::for_each(rhs.begin(), rhs.end(), [&os](const std::string& in) { os << in << " "; });
+    os << "Count: " << rhs.count();
+
     return os;
   }
 
 private:
-  unsigned int support_;
+  unsigned int count_;
   Items items;
 };
 

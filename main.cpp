@@ -6,27 +6,50 @@
 #include <string>
 #include <algorithm>
 
+#include <vector>
+
 //boost
 #include <boost/program_options.hpp>
+#include <boost/assign.hpp>
+
+using namespace boost::assign;
 
 namespace po = boost::program_options;
 
-namespace {
-  struct SetSize {
-    bool operator() (const ItemSet a, const ItemSet b) {
-      return a.size() < b.size();
-    }
-  };
-};
-
 int main(int argc, char *argv[]) {
 
+  const char* logo = 
+    "+------------------------------------------------------------------------+\n"
+    "|  +------------------------------------------------------------------+  |\n"
+    "|  |                 _            ___                                 |  |\n"
+    "|  |        __ _ ___| | ___ __   ( _ )    _ __  _ __ ___  _ __        |  |\n"
+    "|  |       / _` / __| |/ / '__|  / _ \\/\\ | '_ \\| '_ ` _ \\| '__|       |  |\n"
+    "|  |      | (_| \\__ \\   <| |    | (_>  < | |_) | | | | | | |          |  |\n"
+    "|  |       \\__,_|___/_|\\_\\_|     \\___/\\/ | .__/|_| |_| |_|_|          |  |\n"
+    "|  |                                     |_|                          |  |\n"
+    "|  |                          _            _   _                      |  |\n"
+    "|  |      _ __  _ __ ___   __| |_   _  ___| |_(_) ___  _ __  ___      |  |\n"
+    "|  |     | '_ \\| '__/ _ \\ / _` | | | |/ __| __| |/ _ \\| '_ \\/ __|     |  |\n"
+    "|  |     | |_) | | | (_) | (_| | |_| | (__| |_| | (_) | | | \\__ \\     |  |\n"
+    "|  |     | .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|_|\\___/|_| |_|___/     |  |\n"
+    "|  |     |_|                                                          |  |\n"
+    "|  |                                                                  |  |\n"
+    "|  +------------------------------------------------------------------+  |\n"
+    "+------------------------------------------------------------------------+\n";
+
+  std::cout << logo;
+
+  for(auto i = 0; i < 5; ++i)
+    std::cout << "ATTN: tags.txt works best with minsup 0.01" << std::endl;
+
+  std::cout << std::endl;
 
   // Declare the supported options.
   po::options_description desc("Allowed options");
   desc.add_options()
     ("help", "help message")
     ("file", po::value<std::string>(), "input file")
+    ("minsup", po::value<double>(), "minsup")
     ;
 
   po::variables_map vm;
@@ -46,53 +69,41 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  ItemSetContainer a(vm["file"].as<std::string>());
-
-  //find the largest itemset, lambdas....
-  ItemSetContainer::iterator largest = std::max_element(a.begin(), a.end(), SetSize());
-  std::cout << "Largest set:" << std::endl;
-  std::cout << *largest << std::endl;
-
-  //show all sets that are contained within the largest set, works but too much output :(
-  /*
-  for(ItemSetContainer::const_iterator it = a.begin(); it != a.end(); ++it) {
-    if(largest->contains(*it)) {
-      for(ItemSet::const_iterator it2 = it->begin();  it2 != it->end(); ++it2)
-	std::cout << *it2 << " ";
-      std::cout << std::endl;
-    }
+  double minsup;
+  if (vm.count("minsup")) {
+    std::cout << "Minsup: "
+	 << vm["minsup"].as<double>() << ".\n";
+    minsup = vm["minsup"].as<double>();
+  } else {
+    std::cout << "No minsup. Assuming 0.5";
+    minsup = 0.5;
   }
-  */
   
-  std::cout << "Remove the middle:" << std::endl;
-  ItemSet::iterator it = largest->begin();
-  std::advance(it, largest->size() / 2);
-  ItemSet subset = largest->subset(it);
-  std::cout << subset << std::endl;
+  ItemSetContainer transactions(vm["file"].as<std::string>());
+
+  std::vector<ItemSetContainer> runs;
+  runs.push_back(transactions.init_pass(minsup));
+
+  while(!runs.back().empty()) {
+    runs.push_back(runs.back().generate_candidates(transactions, minsup));
+    std::cout << runs.back() << std::endl << std::endl;
+  }
   
-  std::cout << "Match on the first " << (largest->size() / 2) <<  " items:" << std::endl;
-  if(subset.matches(*largest, it))
-    std::cout << "True.";
-  else
-    std::cout << "You can't read this.";
-  std::cout << std::endl << std::endl;
 
-  //copy a portition to make init_pass more readable
-  ItemSetContainer portition;
-  std::copy(a.begin(), a.begin() + 5, std::back_inserter(portition));
-  //a reduced portition, show it
-  std::cout << "The first 5 ItemSetContainers contain: " << std::endl;
-  for(ItemSetContainer::const_iterator it = portition.begin();
-      it != portition.end(); ++it)
-    std::cout << *it << std::endl;
+  // ItemSetContainer transactions2;
+  // vector<string> one, two, three, four, five;
+  // one += "1", "2", "3";
+  // two += "1", "2", "4";
+  // three += "1", "3", "4";
+  // four += "1", "3", "5";
+  // five += "2", "3", "4";
 
-  std::cout << std::endl << std::endl;
-
-  //showing off init_pass
-  //init pass uses operator< for ItemSets, it works
-  std::cout << "init_pass on those 5 yields: " << std::endl;
-  ItemSetContainer init_pass = portition.init_pass();
-  for(ItemSetContainer::const_iterator it = init_pass.begin();
-      it != init_pass.end(); ++it)
-    std::cout << *it << std::endl;
+  // transactions2.push_back(ItemSet(one));
+  // transactions2.push_back(ItemSet(two));
+  // transactions2.push_back(ItemSet(three));
+  // transactions2.push_back(ItemSet(four));
+  // transactions2.push_back(ItemSet(five));
+  
+  // ItemSetContainer transactions3;
+  // std::cout << transactions2.generate_candidates(transactions2, 0.0);
 }
