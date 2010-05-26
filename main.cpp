@@ -83,32 +83,13 @@ int main(int argc, char *argv[]) {
   str_pool pool;
 
   ItemSetContainer transactions(vm["file"].as<std::string>(), pool);
-  std::cout << "front size: " << transactions.front().size() << std::endl;
-  transactions.erase(transactions.begin());
 
   std::vector<ItemSetContainer> runs;
   runs.push_back(transactions.init_pass(minsup));
 
   while(!runs.back().empty()) {
      runs.push_back(runs.back().generate_candidates(transactions, minsup));
-     std::cout << runs.back() << std::endl << std::endl;
+     std::cout << "Result of generation: " << std::endl 
+	       << runs.back() << std::endl << std::endl;
   }
-  
-
-  // ItemSetContainer transactions2;
-  // vector<string> one, two, three, four, five;
-  // one += "1", "2", "3";
-  // two += "1", "2", "4";
-  // three += "1", "3", "4";
-  // four += "1", "3", "5";
-  // five += "2", "3", "4";
-
-  // transactions2.push_back(ItemSet(one));
-  // transactions2.push_back(ItemSet(two));
-  // transactions2.push_back(ItemSet(three));
-  // transactions2.push_back(ItemSet(four));
-  // transactions2.push_back(ItemSet(five));
-  
-  // ItemSetContainer transactions3;
-  // std::cout << transactions2.generate_candidates(transactions2, 0.0);
 }

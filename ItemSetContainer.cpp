@@ -14,6 +14,7 @@ using namespace std;
 
 ItemSetContainer::ItemSetContainer(const string& inFile, str_pool& pool) {
   ifstream is(inFile.data());
+
   //getline from <string> _not_ iostream member
   while(is.good()) {
     string tokenLine;
@@ -27,6 +28,10 @@ ItemSetContainer::ItemSetContainer(const string& inFile, str_pool& pool) {
 		   back_inserter<ItemSet>(itemSets.back()),
 		   [&pool](const std::string& x) { return str_proxy(x, pool); });
   }
+  //remove the newline
+  if(itemSets.back().size() == 0)
+    itemSets.pop_back();
+  
   pool.seal();
   std::for_each(itemSets.begin(), itemSets.end(), [](ItemSet& x) { x.sort(); });
   std::sort(begin(), end());
@@ -44,12 +49,13 @@ ItemSetContainer ItemSetContainer::init_pass(double minsup) const {
 	  if(ret.second == false) { ++(ret.first->second); }});
     });
 
+  //pedantic borks on deduction of this lambda's return type :(
   std::transform(counter.begin(), counter.end(), 
 		 back_inserter(tmp), 
 		 [](const pair<str_proxy, unsigned int>& in) -> ItemSet { 
 		   ItemSet tmp(in.second); tmp.push_back(in.first); return tmp; });
-  //pedantic borks on deduction of this lambda's return type :(
 
+  //prune
   auto it = std::remove_if(tmp.begin(), tmp.end(), [&minsup, this](const ItemSet& in) {
       return in.support(this->size()) < minsup; });
 
