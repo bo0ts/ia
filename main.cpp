@@ -1,5 +1,6 @@
 //prj
 #include "ItemSetContainer.hh"
+#include "str_pool.hh"
 
 //std
 #include <iostream>
@@ -79,10 +80,12 @@ int main(int argc, char *argv[]) {
     minsup = 0.5;
   }
   
-  ItemSetContainer transactions(vm["file"].as<std::string>());
+  str_pool pool;
+
+  ItemSetContainer transactions(vm["file"].as<std::string>(), pool);
   std::cout << "front size: " << transactions.front().size() << std::endl;
   transactions.erase(transactions.begin());
-  
+
   std::vector<ItemSetContainer> runs;
   runs.push_back(transactions.init_pass(minsup));
 

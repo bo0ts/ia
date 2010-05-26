@@ -9,13 +9,15 @@
 
 #include "ItemSet.hh"
 
+class str_pool;
+
 //somewhat satisfies Backward Insertion Container and Sequence concepts
 //complete no-op code, could be a typedef
 class ItemSetContainer {
 public:
   //construct all itemsets from inFile
   ItemSetContainer() { }
-  ItemSetContainer(const std::string& inFile);
+  ItemSetContainer(const std::string& inFile, str_pool& pool);
 
   //typedefs
   typedef std::vector<ItemSet> ItemSets;

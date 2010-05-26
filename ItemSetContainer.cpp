@@ -1,5 +1,7 @@
 #include "ItemSetContainer.hh"
 
+#include "str_pool.hh"
+
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -10,43 +12,41 @@
 
 using namespace std;
 
-ItemSetContainer::ItemSetContainer(const string& inFile) {
+ItemSetContainer::ItemSetContainer(const string& inFile, str_pool& pool) {
   ifstream is(inFile.data());
   //getline from <string> _not_ iostream member
   while(is.good()) {
     string tokenLine;
     getline(is, tokenLine);
-    vector<string> tokens;
-
     istringstream iss(tokenLine);
 
     itemSets.push_back(ItemSet(0));
-    copy(istream_iterator<string>(iss),
-	 istream_iterator<string>(),
-	 back_inserter<ItemSet>(itemSets.back())); 
-    //emacs indentation borks, when there is no SPC between
-    //closing angle bracket, jesus...
-    itemSets.back().sort();
-  }
 
+    std::transform(istream_iterator<string>(iss),
+		   istream_iterator<string>(),
+		   back_inserter<ItemSet>(itemSets.back()),
+		   [&pool](const std::string& x) { return str_proxy(x, pool); });
+  }
+  pool.seal();
+  std::for_each(itemSets.begin(), itemSets.end(), [](ItemSet& x) { x.sort(); });
   std::sort(begin(), end());
 }
 
 ItemSetContainer ItemSetContainer::init_pass(double minsup) const {
   ItemSetContainer tmp;
 
-  typedef map<std::string, unsigned int> StringCounter;
+  typedef map<str_proxy, unsigned int> StringCounter;
   StringCounter counter;
 
   for_each(begin(), end(), [&counter](const ItemSet& in) {
-      for_each(in.begin(), in.end(), [&counter](const std::string& in2) {
+      for_each(in.begin(), in.end(), [&counter](const str_proxy& in2) {
 	  pair<StringCounter::iterator, bool> ret = counter.insert(make_pair(in2, 1u));
 	  if(ret.second == false) { ++(ret.first->second); }});
     });
 
   std::transform(counter.begin(), counter.end(), 
 		 back_inserter(tmp), 
-		 [](const pair<std::string, unsigned int>& in) -> ItemSet { 
+		 [](const pair<str_proxy, unsigned int>& in) -> ItemSet { 
 		   ItemSet tmp(in.second); tmp.push_back(in.first); return tmp; });
   //pedantic borks on deduction of this lambda's return type :(
 
