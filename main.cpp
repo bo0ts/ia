@@ -38,10 +38,10 @@ int main(int argc, char *argv[]) {
     "|  +------------------------------------------------------------------+  |\n"
     "+------------------------------------------------------------------------+\n";
 
-  std::cout << logo;
+  std::cout << logo << std::endl;
 
   for(auto i = 0; i < 5; ++i)
-    std::cout << "ATTN: tags.txt works best with minsup 0.01" << std::endl;
+    std::cout << "ATTN: tags.txt works good with minsup 0.01" << std::endl;
 
   std::cout << std::endl;
 
