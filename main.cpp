@@ -89,7 +89,10 @@ int main(int argc, char *argv[]) {
 
   while(!runs.back().empty()) {
      runs.push_back(runs.back().generate_candidates(transactions, minsup));
-     std::cout << "Result of generation: " << std::endl 
-	       << runs.back() << std::endl << std::endl;
+     if(!runs.back().empty())
+       std::cout << "Result of generation: " << std::endl 
+		 << runs.back() << std::endl << std::endl;
+     else
+       std::cout << "Generated empty result. End of story." << std::endl;
   }
 }

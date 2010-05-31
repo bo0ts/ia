@@ -2,8 +2,8 @@ OBJS = ItemSetContainer.o main.o
 CXX = g++
 DEBUG = -g
 OPTI = -O4
-CXXFLAGS = -Wall -Wextra -Wno-inline -pedantic -pedantic-errors -std=c++0x -c $(DEBUG) $(OPTI)
-LFLAGS = -lboost_program_options $(DEBUG) $(OPTI)
+CXXFLAGS = -Wall -Wextra -std=c++0x -c $(DEBUG) $(OPTI)
+LFLAGS = -lboost_program_options -lboost_thread-mt $(DEBUG) $(OPTI)
 
 main: $(OBJS) 
 	$(CXX) $(LFLAGS) $(OBJS) -o main

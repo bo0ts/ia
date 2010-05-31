@@ -17,6 +17,7 @@ class ItemSetContainer {
 public:
   //construct all itemsets from inFile
   ItemSetContainer() { }
+  ItemSetContainer(const std::vector<ItemSet>& in) : itemSets(in) {}
   ItemSetContainer(const std::string& inFile, str_pool& pool);
 
   //typedefs
