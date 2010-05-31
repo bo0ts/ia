@@ -1,0 +1,79 @@
+---------------------
+-- without threads:--
+---------------------
+
+Input file: tags2.txt.
+Minsup: 0.01.
+
+Result of generation: 
+.net c# Count: 16987
+asp.net c# Count: 8296
+javascript jquery Count: 8145
+
+Generated empty result. End of story.
+
+7.944 secs
+
+Input file: tags2.txt.
+Minsup: 0.005.
+Result of generation: 
+.net c# Count: 16987
+asp.net c# Count: 8296
+c# winforms Count: 4185
+c# wpf Count: 3030
+cocoa-touch iphone Count: 3391
+css html Count: 4396
+html javascript Count: 3888
+iphone iphone-sdk Count: 3740
+iphone objective-c Count: 4729
+javascript jquery Count: 8145
+mysql php Count: 4774
+mysql sql Count: 3097
+ruby ruby-on-rails Count: 3433
+sql sql-server Count: 4646
+
+Generated empty result. End of story.
+
+24.174 secs
+
+---------------------
+--  with threads:  --
+---------------------
+
+Input file: tags2.txt.
+Minsup: 0.01.
+thread_num: 8 size: 33 chunk size: 4
+Result of generation: 
+.net c# Count: 16987
+asp.net c# Count: 8296
+javascript jquery Count: 8145
+
+thread_num: 8 size: 2 chunk size: 0
+Generated empty result. End of story.
+
+4.103 secs
+
+Input file: tags2.txt.
+Minsup: 0.005.
+thread_num: 8 size: 67 chunk size: 8
+Result of generation: 
+.net c# Count: 16987
+asp.net c# Count: 8296
+c# winforms Count: 4185
+c# wpf Count: 3030
+cocoa-touch iphone Count: 3391
+css html Count: 4396
+html javascript Count: 3888
+iphone iphone-sdk Count: 3740
+iphone objective-c Count: 4729
+javascript jquery Count: 8145
+mysql php Count: 4774
+mysql sql Count: 3097
+ruby ruby-on-rails Count: 3433
+sql sql-server Count: 4646
+
+
+thread_num: 8 size: 13 chunk size: 1
+Generated empty result. End of story.
+
+8.650 secs
